@@ -36,26 +36,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 
-    @Autowired
-    protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-            .inMemoryAuthentication()
-                .withUser("nila").password("{noop}password").roles("USER")
-                .and()
-                .withUser("admin").password("{noop}admin").roles("USER", "ADMIN");
-    }
-
 //    @Autowired
-//    private DataSource dataSource;
-//
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//
-//        auth.jdbcAuthentication().dataSource(dataSource)
-//                .usersByUsernameQuery("select username, password, enabled"
-//                        + " from users where username=?")
-//                .authoritiesByUsernameQuery("select username, authority "
-//                        + "from authorities where username=?")
-//                .passwordEncoder(new BCryptPasswordEncoder());
+//    protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//        auth
+//            .inMemoryAuthentication()
+//                .withUser("nila").password("{noop}password").roles("USER")
+//                .and()
+//                .withUser("admin").password("{noop}admin").roles("USER", "ADMIN");
 //    }
+
+    @Autowired
+    private DataSource dataSource;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+
+        auth.jdbcAuthentication().dataSource(dataSource)
+                .usersByUsernameQuery("select username, password, enabled"
+                        + " from users where username=?")
+                .authoritiesByUsernameQuery("select username, authority "
+                        + "from authorities where username=?")
+                .passwordEncoder(new BCryptPasswordEncoder());
+    }
 }
