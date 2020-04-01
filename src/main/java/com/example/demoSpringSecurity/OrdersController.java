@@ -11,6 +11,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +55,7 @@ public class OrdersController {
 
     @PostMapping(path = "/orders", headers = {"Content-Type=application/json", "Accept=application/json"})
     @ResponseStatus(HttpStatus.CREATED)
-    public Orders createOrder(@RequestBody Orders orderRequest){
+    public Orders createOrder(@Valid @RequestBody Orders orderRequest){
 
        return ordersRepository.save(orderRequest);
     }
