@@ -30,7 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable()
                 .formLogin().disable();
-        
+
         // To allow H2 console displayed properly
         http.headers().frameOptions().disable();
 

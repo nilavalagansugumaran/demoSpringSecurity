@@ -1,16 +1,22 @@
 package com.example.demoSpringSecurity;
 
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
+@Slf4j
 public class OrdersController {
 
     @Autowired private OrdersRepository ordersRepository;
@@ -30,14 +36,18 @@ public class OrdersController {
     }
 
     @GetMapping(path = "/orders", headers = {"Content-Type=application/json", "Accept=application/json"})
-    public List<Orders> getAllOrders(){
+    public List<Orders> getAllOrders(Principal principal, Authentication auth ){
 
-        List<Orders> o = ordersRepository.findByCustomerName("dummy");
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authFromContext = securityContext.getAuthentication();
+        log.debug("User from securityContext {}", authFromContext.getName());
+
+        List<Orders> o = ordersRepository.findByCustomerName(principal.getName());
 
         if(!CollectionUtils.isEmpty(o)) {
             return o;
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Orders not found for customer - " + "dummy" );
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Orders not found for customer - " + auth.getName() );
         }
 
     }
