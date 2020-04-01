@@ -29,4 +29,7 @@ public class Orders {
     @Positive(message = "items value mut be in positive")
     private Double itemsValue;
 
+    @ValidPhoneNumber
+    private String phoneNumber;
+
 }
